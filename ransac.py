@@ -86,16 +86,6 @@ def model_error(model, pair):
                           np.array([pair[1].coords[0], pair[1].coords[1], 1]).reshape(1, -1),
                           metric='euclidean')
 
-# def model_error(model, pair):
-#     temp = 0
-#     try:
-#         temp = distance.cdist(np.reshape(model @ np.array([pair[0].coords[0], pair[0].coords[1], 1]), newshape=(1, -1)),
-#                           np.array([pair[1].coords[0], pair[1].coords[1], 1]).reshape(1, -1),
-#                           metric='euclidean')
-#     except Exception as e:
-#         print(pair)
-#         print(e)
-#     return temp
 
 def calc_model(samples):
     x1 = samples[0][0].coords[0]
@@ -112,10 +102,12 @@ def calc_model(samples):
     v3 = samples[2][1].coords[1]
     if len(samples) == 3:
         a = affine_array(x1, y1, x2, y2, x3, y3, u1, v1, u2, v2, u3, v3)
-    else:
+    elif len(samples) == 4:
         x4 = samples[3][0].coords[0]
         y4 = samples[3][0].coords[1]
         u4 = samples[3][1].coords[0]
         v4 = samples[3][1].coords[1]
         a = perspective_array(x1, y1, x2, y2, x3, y3, x4, y4, u1, v1, u2, v2, u3, v3, u4, v4)
+    else:
+        raise Exception("incorrect samples size")
     return a

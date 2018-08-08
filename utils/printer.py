@@ -58,11 +58,12 @@ def print_all_image(image_paths, key_points_1, key_points_2, accepted_pairs, ran
     for pair in ransac_pairs:
         add_lines(draw, pair, x_offset, color='yellow')
 
-    result_path = os.path.join(os.path.dirname(image_paths[0]), filename)
+    # result_path = os.path.join(os.path.dirname(image_paths[0]), filename)
+    result_path = os.path.dirname(image_paths[0]) + '/' +  filename
+    print(result_path)
     new_im.save(result_path)
 
 
-# def add_lines(image_draw, pair, x_offset, scale=200):
 def add_lines(image_draw, pair, x_offset, color):
     x1 = pair[0].coords[0]
     y1 = pair[0].coords[1]

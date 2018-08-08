@@ -1,6 +1,6 @@
 import numpy as np
 
-from Point import FeaturedPoint
+from point import FeaturedPoint
 
 SIFT_SUFFIX = '.haraff.sift'
 

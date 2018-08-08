@@ -21,7 +21,7 @@ IMAGES = {1: ['data/1/DSC03230.png', 'data/1/DSC03240.png'],
           13: ['data/r3/3-1.png', 'data/r3/3-2.png']
           }
 
-PATHS = IMAGES[6]
+PATHS = IMAGES[3]
 
 
 @timing
