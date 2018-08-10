@@ -30,9 +30,9 @@ def main():
     pairs = adjacency.find_pairs_euclidean(key_points_1, key_points_2)
 
     n = 25
-    t = 0.12
+    t = 0.13
     filtered_pairs = adjacency.filter_pairs(pairs, n=n, threshold=t)
-    ransac_ = ransac.Ransac(np.array(pairs), filtered_pairs)
+    ransac_ = ransac.Ransac(filtered_pairs)
 
     h = None
     # h = heuristic.EuclideanDistanceHeuristic(PATHS, lower_limit=0.00, upper_limit=0.3)
