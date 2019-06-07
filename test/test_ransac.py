@@ -1,9 +1,26 @@
 import pytest
-import numpy as np
 
 from ransac import *
 from point import Point
 
+
+def test_calculate_ransac_pairs():
+    filtered_pairs = [(Point([1, 1]), Point([1, 1])), (Point([1, 1]), Point([2, 2]))]
+    model = np.array([
+        [1, 0, 1],
+        [0, 1, 1],
+        [0, 0, 1],
+    ])
+    max_error = 1
+    assert calculate_ransac_pairs(filtered_pairs, model, max_error) == [(Point([1, 1]), Point([2, 2]))]
+    filtered_pairs = [(Point([1, 1]), Point([1, 1])), (Point([1, 1]), Point([2, 2]))]
+    model = np.array([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+    ])
+    max_error = 1
+    assert calculate_ransac_pairs(filtered_pairs, model, max_error) == [(Point([1, 1]), Point([1.0, 1.0]))]
 
 def test_model_error():
     model = np.array([
@@ -96,5 +113,6 @@ def test_is_invertible():
 
 
 def test_get_params():
-    assert get_params([(Point([0, 2]), Point([3, 1]))]) == (0, 2, 3, 1)
+    assert get_params([(Point([0, 5]), Point([2, 3])), (Point([10, 14]), Point([12, 13]))]) \
+           == (0, 5, 2, 3, 10, 14, 12, 13)
     assert get_params([]) == ()
