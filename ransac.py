@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.spatial import distance
-import itertools
 
 
 class Ransac:
@@ -10,8 +9,11 @@ class Ransac:
         self._ransac_pairs = []
 
     def calculate(self, size, no_draws, max_error, heuristic=None):
-        self.ransac_model(size, no_draws, max_error, heuristic)
-        self.calculate_ransac_pairs(max_error)
+        self._model = self.ransac_model(size, no_draws, max_error, heuristic)
+        self._ransac_pairs = calculate_ransac_pairs(self._filtered_pairs, self._model, max_error)
+
+    def get_ransac_pairs(self):
+        return self._ransac_pairs
 
     def ransac_model(self, size, no_draws, max_error, heuristic):
         pairs = self._filtered_pairs
@@ -32,22 +34,18 @@ class Ransac:
             if score > best_score:
                 best_score = score
                 best_model = model
-        self._model = best_model
+        return best_model
 
-    def calculate_ransac_pairs(self, max_error):
-        self._ransac_pairs = []
-        for pair in self._filtered_pairs:
-            if model_error(self._model, pair) < max_error:
-                self._ransac_pairs.append(pair)
 
-    def get_ransac_pairs(self):
-        return self._ransac_pairs
+def calculate_ransac_pairs(filtered_pairs, model, max_error):
+    return [pair for pair in filtered_pairs if model_error(model, pair) < max_error]
 
 
 def model_error(model, pair):
     return distance.cdist(np.reshape(model @ np.array([pair[0].coords[0], pair[0].coords[1], 1]), newshape=(1, -1)),
                           np.array([pair[1].coords[0], pair[1].coords[1], 1]).reshape(1, -1),
                           metric='euclidean')
+
 
 def calc_model(samples):
     point_pairs = [(sample[0], sample[1]) for sample in samples]
@@ -100,5 +98,7 @@ def is_invertible(a):
 
 
 def get_params(point_pairs):
-    return tuple(itertools.chain.from_iterable([[pair[0].coords[0], pair[0].coords[1],
-                                                 pair[1].coords[0], pair[1].coords[1]] for pair in point_pairs]))
+    result = []
+    for pair in point_pairs:
+        result += pair[0].coords + pair[1].coords
+    return tuple(result)
